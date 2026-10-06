@@ -27,10 +27,13 @@ export default function PostLayout({ children }: { children: ReactNode }) {
 
   if (!isProfile || !profile) {
     return (
-      <div role="status" className="flex min-h-dvh items-center justify-center gap-3 text-muted">
-        <TbLoader2 aria-hidden="true" className="size-6 animate-spin text-brand" />
-        Memuat sesi…
-      </div>
+      <>
+        <h1 className="sr-only">Linimasa</h1>
+        <div role="status" className="flex min-h-dvh items-center justify-center gap-3 text-muted">
+          <TbLoader2 aria-hidden="true" className="size-6 animate-spin text-brand" />
+          Memuat sesi…
+        </div>
+      </>
     );
   }
 
