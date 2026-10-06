@@ -41,16 +41,32 @@ export default function LoginPage() {
 
       <form onSubmit={onSubmit} noValidate className="mt-8 space-y-5">
         <div>
-          <label htmlFor="email" className={ui.label}>Email</label>
-          <input id="email" type="email" autoComplete="email" className={ui.field} value={email} onChange={onEmailChange} aria-invalid={Boolean(errors.email)} />
+          <label htmlFor="login-email-input" className={ui.label}>Email</label>
+          <input
+            id="login-email-input"
+            type="email"
+            autoComplete="email"
+            className={ui.field}
+            value={email}
+            onChange={onEmailChange}
+            aria-invalid={Boolean(errors.email)}
+          />
           {errors.email && <p className={ui.error} role="alert">{errors.email}</p>}
         </div>
         <div>
-          <label htmlFor="password" className={ui.label}>Kata sandi</label>
-          <input id="password" type="password" autoComplete="current-password" className={ui.field} value={password} onChange={onPasswordChange} aria-invalid={Boolean(errors.password)} />
+          <label htmlFor="login-password-input" className={ui.label}>Kata sandi</label>
+          <input
+            id="login-password-input"
+            type="password"
+            autoComplete="current-password"
+            className={ui.field}
+            value={password}
+            onChange={onPasswordChange}
+            aria-invalid={Boolean(errors.password)}
+          />
           {errors.password && <p className={ui.error} role="alert">{errors.password}</p>}
         </div>
-        <button type="submit" className={`${ui.btnPrimary} w-full`} disabled={loading}>
+        <button id="login-submit-button" type="submit" className={`${ui.btnPrimary} w-full`} disabled={loading}>
           {loading && <TbLoader2 aria-hidden="true" className="size-4 animate-spin" />}
           {loading ? "Memproses…" : "Masuk"}
         </button>
