@@ -42,7 +42,7 @@ export default function DetailPage() {
 
   const refresh = () => dispatch(asyncGetPost(postId));
 
-  if (!post || post.id !== postId) {
+  if (post?.id !== postId) {
     return (
       <>
         <h1 className="sr-only">Detail postingan</h1>
@@ -55,7 +55,7 @@ export default function DetailPage() {
 
   const cover = assetUrl(post.cover);
   const isOwner = profile?.id === post.user_id;
-  const liked = profile !== null && post.likes.includes(profile.id);
+  const liked = post.likes.includes(profile?.id ?? -1);
   const comments = post.comments.filter(isComment);
 
   const onToggleLike = async () => {
