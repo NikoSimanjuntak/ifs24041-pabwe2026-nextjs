@@ -1,6 +1,6 @@
 "use client";
 
-import { type ChangeEvent, type FormEvent, useEffect, useState } from "react";
+import { type ChangeEvent, type SyntheticEvent, useEffect, useState } from "react";
 import { TbLoader2, TbPhoto } from "react-icons/tb";
 import Modal from "@/components/Modal";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
@@ -15,7 +15,7 @@ interface ChangeCoverModalProps {
   onSuccess: () => void;
 }
 
-export default function ChangeCoverModal({ postId, onClose, onSuccess }: ChangeCoverModalProps) {
+export default function ChangeCoverModal({ postId, onClose, onSuccess }: Readonly<ChangeCoverModalProps>) {
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.posts.isPostChangeCover);
   const [picked, setPicked] = useState<{ file: File; url: string } | null>(null);
@@ -44,7 +44,7 @@ export default function ChangeCoverModal({ postId, onClose, onSuccess }: ChangeC
     setPicked({ file, url: URL.createObjectURL(file) });
   };
 
-  const onSubmit = async (event: FormEvent) => {
+  const onSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
     if (!picked) {
       setError("Pilih gambar terlebih dahulu");

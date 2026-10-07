@@ -10,7 +10,7 @@ import { showConfirmDialog } from "@/helpers/toolsHelper";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { ui } from "@/lib/ui";
 
-export default function NavbarComponent({ onMenuClick }: { onMenuClick: () => void }) {
+export default function NavbarComponent({ onMenuClick }: Readonly<{ onMenuClick: () => void }>) {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const profile = useAppSelector((state) => state.users.profile);

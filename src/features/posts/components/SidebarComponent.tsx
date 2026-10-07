@@ -17,13 +17,23 @@ interface SidebarProps {
   onClose: () => void;
 }
 
-export default function SidebarComponent({ open, onClose }: SidebarProps) {
+export default function SidebarComponent({ open, onClose }: Readonly<SidebarProps>) {
   const pathname = usePathname();
   const tab = useSearchParams().get("tab");
 
   return (
     <>
-      {open && <div data-testid="sidebar-backdrop" className="fixed inset-0 z-30 bg-ink/40 lg:hidden" onClick={onClose} />}
+      {open && (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-hidden="true"
+          aria-label="Tutup menu latar"
+          data-testid="sidebar-backdrop"
+          className="fixed inset-0 z-30 cursor-default bg-ink/40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
       <aside
         aria-label="Navigasi utama"
         className={`fixed inset-y-0 left-0 z-40 w-64 border-r border-line bg-surface p-4 transition-transform lg:sticky lg:top-20 lg:z-0 lg:h-fit lg:w-56 lg:shrink-0 lg:translate-x-0 lg:rounded-xl lg:border ${

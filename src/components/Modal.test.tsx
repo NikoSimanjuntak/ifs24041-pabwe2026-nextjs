@@ -25,12 +25,12 @@ describe("Modal", () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it("menutup saat latar diklik, bukan saat isi dialog diklik", () => {
+  it("menutup saat latar diklik, bukan saat isi dialog diklik", async () => {
     const onClose = vi.fn();
     render(<Modal title="Judul" onClose={onClose}>x</Modal>);
-    fireEvent.mouseDown(screen.getByRole("dialog"));
+    await userEvent.click(screen.getByRole("dialog"));
     expect(onClose).not.toHaveBeenCalled();
-    fireEvent.mouseDown(screen.getByRole("dialog").parentElement!);
+    await userEvent.click(screen.getByLabelText("Tutup latar"));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 });

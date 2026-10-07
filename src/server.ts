@@ -8,7 +8,7 @@ import next from "next";
 function readPortFromFile(file: string): string | undefined {
   const path = resolve(process.cwd(), file);
   if (!existsSync(path)) return undefined;
-  return readFileSync(path, "utf8").match(/^\s*APP_PORT\s*=\s*"?(\d+)"?\s*$/m)?.[1];
+  return /^\s*APP_PORT\s*=\s*"?(\d+)"?\s*$/m.exec(readFileSync(path, "utf8"))?.[1];
 }
 
 const port = Number(

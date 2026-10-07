@@ -7,8 +7,38 @@ import { formatDate } from "@/helpers/toolsHelper";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import useInput from "@/hooks/useInput";
 import { ui } from "@/lib/ui";
+import type { User } from "@/types";
 import { asyncGetUsers } from "../states/action";
 
+function UserList({ loading, users }: Readonly<{ loading: boolean; users: User[] }>) {
+  if (loading) {
+    return <output className="block py-12 text-center text-sm text-muted">Memuat pengguna…</output>;
+  }
+
+  if (users.length === 0) {
+    return (
+      <div className={`${ui.card} px-6 py-14 text-center`}>
+        <p className="font-semibold">Pengguna tidak ditemukan</p>
+        <p className="mt-1 text-sm text-muted">Coba kata kunci lain.</p>
+      </div>
+    );
+  }
+
+  return (
+    <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {users.map((user) => (
+        <li key={user.id} className={`${ui.card} flex items-center gap-4 p-4`}>
+          <Avatar name={user.name} photo={user.photo} className="size-12" />
+          <div className="min-w-0">
+            <p className="truncate font-semibold">{user.name}</p>
+            <p className="truncate text-sm text-muted">{user.email}</p>
+            {user.created_at && <p className="mt-0.5 text-xs text-muted">Bergabung {formatDate(user.created_at)}</p>}
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default function UsersPage() {
   const dispatch = useAppDispatch();
@@ -37,27 +67,7 @@ export default function UsersPage() {
         <input type="search" aria-label="Cari pengguna" placeholder="Cari nama atau email" className={`${ui.field} pl-9`} value={query} onChange={onQueryChange} />
       </div>
 
-      {loading ? (
-        <p role="status" className="py-12 text-center text-sm text-muted">Memuat pengguna…</p>
-      ) : visible.length === 0 ? (
-        <div className={`${ui.card} px-6 py-14 text-center`}>
-          <p className="font-semibold">Pengguna tidak ditemukan</p>
-          <p className="mt-1 text-sm text-muted">Coba kata kunci lain.</p>
-        </div>
-      ) : (
-        <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {visible.map((user) => (
-            <li key={user.id} className={`${ui.card} flex items-center gap-4 p-4`}>
-              <Avatar name={user.name} photo={user.photo} className="size-12" />
-              <div className="min-w-0">
-                <p className="truncate font-semibold">{user.name}</p>
-                <p className="truncate text-sm text-muted">{user.email}</p>
-                {user.created_at && <p className="mt-0.5 text-xs text-muted">Bergabung {formatDate(user.created_at)}</p>}
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+      <UserList loading={loading} users={visible} />
     </section>
   );
 }

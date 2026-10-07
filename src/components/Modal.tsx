@@ -10,7 +10,7 @@ interface ModalProps {
   children: ReactNode;
 }
 
-export default function Modal({ title, onClose, children }: ModalProps) {
+export default function Modal({ title, onClose, children }: Readonly<ModalProps>) {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
@@ -20,13 +20,17 @@ export default function Modal({ title, onClose, children }: ModalProps) {
   }, [onClose]);
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-ink/50 p-4 sm:items-center"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
-    >
-      <div role="dialog" aria-modal="true" aria-label={title} className={`${ui.card} w-full max-w-lg p-5 shadow-xl`}>
+    <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
+      {/* Latar: tombol asli agar klik di luar dialog menutupnya; pengguna keyboard memakai Escape/tombol Tutup. */}
+      <button
+        type="button"
+        tabIndex={-1}
+        aria-hidden="true"
+        aria-label="Tutup latar"
+        className="absolute inset-0 cursor-default bg-ink/50"
+        onClick={onClose}
+      />
+      <dialog open aria-modal="true" aria-label={title} className={`${ui.card} relative w-full max-w-lg p-5 text-ink shadow-xl`}>
         <div className="mb-4 flex items-center justify-between gap-4">
           <h2 className="text-lg font-bold">{title}</h2>
           <button type="button" aria-label="Tutup" className={ui.iconBtn} onClick={onClose}>
@@ -34,7 +38,7 @@ export default function Modal({ title, onClose, children }: ModalProps) {
           </button>
         </div>
         {children}
-      </div>
+      </dialog>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { type ChangeEvent, type FormEvent, useEffect, useState } from "react";
+import { type ChangeEvent, type SyntheticEvent, useEffect, useState } from "react";
 import { TbLoader2 } from "react-icons/tb";
 import Avatar from "@/components/Avatar";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
@@ -12,18 +12,18 @@ import { asyncChangePassword, asyncChangePhoto, asyncChangeProfile } from "../st
 const MAX_SIZE = 2 * 1024 * 1024;
 const emailPattern = /^\S+@\S+\.\S+$/;
 
-function Spinner({ show }: { show: boolean }) {
+function Spinner({ show }: Readonly<{ show: boolean }>) {
   return show ? <TbLoader2 aria-hidden="true" className="size-4 animate-spin" /> : null;
 }
 
-function ProfileForm({ profile }: { profile: User }) {
+function ProfileForm({ profile }: Readonly<{ profile: User }>) {
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.users.isChangeProfile);
   const [name, onNameChange] = useInput(profile.name);
   const [email, onEmailChange] = useInput(profile.email);
   const [errors, setErrors] = useState<{ name?: string; email?: string }>({});
 
-  const onSubmit = async (event: FormEvent) => {
+  const onSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
     const found: typeof errors = {};
     if (!name.trim()) found.name = "Nama wajib diisi";
@@ -52,7 +52,7 @@ function ProfileForm({ profile }: { profile: User }) {
   );
 }
 
-function PhotoForm({ profile }: { profile: User }) {
+function PhotoForm({ profile }: Readonly<{ profile: User }>) {
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.users.isChangeProfilePhoto);
   const [picked, setPicked] = useState<{ file: File; url: string } | null>(null);
@@ -74,7 +74,7 @@ function PhotoForm({ profile }: { profile: User }) {
     setPicked({ file, url: URL.createObjectURL(file) });
   };
 
-  const onSubmit = async (event: FormEvent) => {
+  const onSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
     if (!picked) return setError("Pilih foto terlebih dahulu");
     if (await dispatch(asyncChangePhoto(picked.file))) setPicked(null);
@@ -111,7 +111,7 @@ function PasswordForm() {
   const [confirmation, onConfirmationChange, setConfirmation] = useInput();
   const [errors, setErrors] = useState<Partial<Record<"current" | "next" | "confirmation", string>>>({});
 
-  const onSubmit = async (event: FormEvent) => {
+  const onSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
     const found: typeof errors = {};
     if (!current) found.current = "Kata sandi saat ini wajib diisi";

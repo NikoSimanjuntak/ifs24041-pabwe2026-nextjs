@@ -10,7 +10,7 @@ import NavbarComponent from "../components/NavbarComponent";
 import SidebarComponent from "../components/SidebarComponent";
 
 /** Shell dashboard + penjaga rute: memverifikasi token dan memuat profil sesi. */
-export default function PostLayout({ children }: { children: ReactNode }) {
+export default function PostLayout({ children }: Readonly<{ children: ReactNode }>) {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const profile = useAppSelector((state) => state.users.profile);
@@ -29,10 +29,10 @@ export default function PostLayout({ children }: { children: ReactNode }) {
     return (
       <>
         <h1 className="sr-only">Linimasa</h1>
-        <div role="status" className="flex min-h-dvh items-center justify-center gap-3 text-muted">
+        <output className="flex min-h-dvh items-center justify-center gap-3 text-muted">
           <TbLoader2 aria-hidden="true" className="size-6 animate-spin text-brand" />
           Memuat sesi…
-        </div>
+        </output>
       </>
     );
   }

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="id" className={jakarta.variable}>
+    <html lang="id" className={jakarta.variable} data-scroll-behavior="smooth">
       <body>
         <Providers>{children}</Providers>
       </body>

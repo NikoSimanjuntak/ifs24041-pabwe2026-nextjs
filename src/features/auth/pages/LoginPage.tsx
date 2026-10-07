@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { type FormEvent, useState } from "react";
+import { type SyntheticEvent, useState } from "react";
 import { TbLoader2 } from "react-icons/tb";
 import { useAppDispatch } from "@/hooks/redux";
 import useInput from "@/hooks/useInput";
@@ -19,7 +19,7 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (event: FormEvent) => {
+  const onSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
     const found: Errors = {};
     if (!email.trim()) found.email = "Email wajib diisi";
@@ -42,28 +42,12 @@ export default function LoginPage() {
       <form onSubmit={onSubmit} noValidate className="mt-8 space-y-5">
         <div>
           <label htmlFor="login-email-input" className={ui.label}>Email</label>
-          <input
-            id="login-email-input"
-            type="email"
-            autoComplete="email"
-            className={ui.field}
-            value={email}
-            onChange={onEmailChange}
-            aria-invalid={Boolean(errors.email)}
-          />
+          <input id="login-email-input" type="email" autoComplete="email" className={ui.field} value={email} onChange={onEmailChange} aria-invalid={Boolean(errors.email)} />
           {errors.email && <p className={ui.error} role="alert">{errors.email}</p>}
         </div>
         <div>
           <label htmlFor="login-password-input" className={ui.label}>Kata sandi</label>
-          <input
-            id="login-password-input"
-            type="password"
-            autoComplete="current-password"
-            className={ui.field}
-            value={password}
-            onChange={onPasswordChange}
-            aria-invalid={Boolean(errors.password)}
-          />
+          <input id="login-password-input" type="password" autoComplete="current-password" className={ui.field} value={password} onChange={onPasswordChange} aria-invalid={Boolean(errors.password)} />
           {errors.password && <p className={ui.error} role="alert">{errors.password}</p>}
         </div>
         <button id="login-submit-button" type="submit" className={`${ui.btnPrimary} w-full`} disabled={loading}>

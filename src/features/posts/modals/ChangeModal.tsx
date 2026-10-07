@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type SyntheticEvent, useState } from "react";
 import { TbLoader2 } from "react-icons/tb";
 import Modal from "@/components/Modal";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
@@ -15,13 +15,13 @@ interface ChangeModalProps {
   onSuccess: () => void;
 }
 
-export default function ChangeModal({ postId, description: initial, onClose, onSuccess }: ChangeModalProps) {
+export default function ChangeModal({ postId, description: initial, onClose, onSuccess }: Readonly<ChangeModalProps>) {
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.posts.isPostChange);
   const [description, onDescriptionChange] = useInput(initial);
   const [error, setError] = useState("");
 
-  const onSubmit = async (event: FormEvent) => {
+  const onSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
     if (!description.trim()) {
       setError("Deskripsi wajib diisi");

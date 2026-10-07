@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { type FormEvent, useState } from "react";
+import { type SyntheticEvent, useState } from "react";
 import { TbLoader2 } from "react-icons/tb";
 import { useAppDispatch } from "@/hooks/redux";
 import useInput from "@/hooks/useInput";
@@ -21,7 +21,7 @@ export default function RegisterPage() {
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (event: FormEvent) => {
+  const onSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
     const found: Errors = {};
     if (!name.trim()) found.name = "Nama wajib diisi";

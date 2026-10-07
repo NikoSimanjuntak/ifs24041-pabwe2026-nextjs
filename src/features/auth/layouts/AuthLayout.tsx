@@ -11,7 +11,7 @@ const highlights = [
   { icon: TbMessageCircle, text: "Diskusikan ide lewat kolom komentar" },
 ];
 
-export default function AuthLayout({ children }: { children: ReactNode }) {
+export default function AuthLayout({ children }: Readonly<{ children: ReactNode }>) {
   const router = useRouter();
 
   // Pengguna yang sudah punya sesi tidak perlu melihat halaman masuk/daftar.

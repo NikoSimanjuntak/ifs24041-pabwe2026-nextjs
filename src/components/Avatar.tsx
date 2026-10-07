@@ -7,7 +7,7 @@ interface AvatarProps {
 }
 
 /** Foto pengguna; jika belum ada, tampilkan huruf pertama nama. */
-export default function Avatar({ name, photo, className = "size-9" }: AvatarProps) {
+export default function Avatar({ name, photo, className = "size-9" }: Readonly<AvatarProps>) {
   const src = assetUrl(photo);
   if (src) {
     // eslint-disable-next-line @next/next/no-img-element

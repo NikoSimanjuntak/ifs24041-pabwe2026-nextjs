@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { TbHeart, TbMessageCircle, TbPhoto, TbPlus, TbSearch, TbTrash } from "react-icons/tb";
 import Avatar from "@/components/Avatar";
 import { assetUrl } from "@/helpers/apiHelper";
@@ -14,7 +14,22 @@ import type { Post } from "@/types";
 import AddModal from "../modals/AddModal";
 import { asyncDeleteAllPosts, asyncGetPosts } from "../states/action";
 
-function PostCard({ post }: { post: Post }) {
+const matchesKeyword = (post: Post, keyword: string) =>
+  !keyword || post.description.toLowerCase().includes(keyword) || post.author.name.toLowerCase().includes(keyword);
+
+function TabLink({ href, active, children }: Readonly<{ href: string; active: boolean; children: ReactNode }>) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={`rounded-md px-3.5 py-1.5 ${active ? "bg-brand text-white" : "hover:bg-brand-soft"}`}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function PostCard({ post }: Readonly<{ post: Post }>) {
   const cover = assetUrl(post.cover);
   return (
     <li>
@@ -50,6 +65,29 @@ function PostCard({ post }: { post: Post }) {
   );
 }
 
+function PostList({ isLoading, posts, keyword }: Readonly<{ isLoading: boolean; posts: Post[]; keyword: string }>) {
+  if (isLoading) {
+    return <output className="block py-12 text-center text-sm text-muted">Memuat postingan…</output>;
+  }
+
+  if (posts.length === 0) {
+    return (
+      <div className={`${ui.card} px-6 py-14 text-center`}>
+        <p className="font-semibold">{keyword ? "Tidak ada postingan yang cocok" : "Belum ada postingan"}</p>
+        <p className="mt-1 text-sm text-muted">{keyword ? "Coba kata kunci lain." : "Jadilah yang pertama menulis cerita."}</p>
+      </div>
+    );
+  }
+
+  return (
+    <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      {posts.map((post) => (
+        <PostCard key={post.id} post={post} />
+      ))}
+    </ul>
+  );
+}
+
 export default function HomePage() {
   const dispatch = useAppDispatch();
   const tab = useSearchParams().get("tab") === "me" ? "me" : "all";
@@ -64,10 +102,11 @@ export default function HomePage() {
   }, [dispatch, tab]);
 
   const keyword = query.trim().toLowerCase();
-  const visible = posts.filter(
-    (post) =>
-      !keyword || post.description.toLowerCase().includes(keyword) || post.author.name.toLowerCase().includes(keyword),
-  );
+  const visible = posts.filter((post) => matchesKeyword(post, keyword));
+  const copy =
+    tab === "me"
+      ? { title: "Postingan saya", subtitle: "Semua yang pernah kamu bagikan." }
+      : { title: "Linimasa", subtitle: "Cerita terbaru dari semua pengguna." };
 
   const onAddSuccess = () => {
     setShowAdd(false);
@@ -88,10 +127,8 @@ export default function HomePage() {
     <section className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight">{tab === "me" ? "Postingan saya" : "Linimasa"}</h1>
-          <p className="mt-1 text-sm text-muted">
-            {tab === "me" ? "Semua yang pernah kamu bagikan." : "Cerita terbaru dari semua pengguna."}
-          </p>
+          <h1 className="text-2xl font-extrabold tracking-tight">{copy.title}</h1>
+          <p className="mt-1 text-sm text-muted">{copy.subtitle}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {tab === "me" && posts.length > 0 && (
@@ -107,8 +144,8 @@ export default function HomePage() {
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <nav aria-label="Filter postingan" className="inline-flex rounded-lg border border-line bg-surface p-1 text-sm font-medium">
-          <Link href="/" aria-current={tab === "all" ? "page" : undefined} className={`rounded-md px-3.5 py-1.5 ${tab === "all" ? "bg-brand text-white" : "hover:bg-brand-soft"}`}>Semua</Link>
-          <Link href="/?tab=me" aria-current={tab === "me" ? "page" : undefined} className={`rounded-md px-3.5 py-1.5 ${tab === "me" ? "bg-brand text-white" : "hover:bg-brand-soft"}`}>Milik saya</Link>
+          <TabLink href="/" active={tab === "all"}>Semua</TabLink>
+          <TabLink href="/?tab=me" active={tab === "me"}>Milik saya</TabLink>
         </nav>
         <div className="relative w-full sm:w-72">
           <TbSearch aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted" />
@@ -116,22 +153,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {isLoading ? (
-        <p role="status" className="py-12 text-center text-sm text-muted">Memuat postingan…</p>
-      ) : visible.length === 0 ? (
-        <div className={`${ui.card} px-6 py-14 text-center`}>
-          <p className="font-semibold">{keyword ? "Tidak ada postingan yang cocok" : "Belum ada postingan"}</p>
-          <p className="mt-1 text-sm text-muted">
-            {keyword ? "Coba kata kunci lain." : "Jadilah yang pertama menulis cerita."}
-          </p>
-        </div>
-      ) : (
-        <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {visible.map((post) => (
-            <PostCard key={post.id} post={post} />
-          ))}
-        </ul>
-      )}
+      <PostList isLoading={isLoading} posts={visible} keyword={keyword} />
 
       {showAdd && <AddModal onClose={() => setShowAdd(false)} onSuccess={onAddSuccess} />}
     </section>

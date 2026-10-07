@@ -58,7 +58,8 @@ export async function apiFetch<T = unknown>(
     payload = JSON.stringify(body);
   }
 
-  const response = await fetch(`${DELCOM_BASEURL}${path}${queryString ? `?${queryString}` : ""}`, {
+  const suffix = queryString ? `?${queryString}` : "";
+  const response = await fetch(`${DELCOM_BASEURL}${path}${suffix}`, {
     method,
     headers,
     body: payload,
