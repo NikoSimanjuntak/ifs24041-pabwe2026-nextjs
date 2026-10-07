@@ -203,19 +203,18 @@ pipeline {
 
                     rm -f latest-app.zip
 
-                    # .env.example sengaja ikut dikemas (tidak berisi rahasia) agar
-                    # src/server.ts tetap bisa membaca APP_PORT di server deploy.
                     zip -r latest-app.zip . \
                         -x "node_modules/*" \
                         -x ".git/*" \
                         -x ".env" \
-                        -x ".env.local" \
-                        -x ".env.*.local" \
+                        -x ".env.*" \
                         -x "coverage/*" \
+                        -x ".next/*" \
+                        -x "out/*" \
                         -x ".trivy-cache/*" \
-                        -x ".scannerwork/*" \
                         -x "latest-app.zip" \
-                        -x "trivy-results.sarif"
+                        -x "trivy-results.sarif" \
+                        -x ".docs/*"
 
                     echo "=== Application Package Created ==="
 
